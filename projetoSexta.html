@@ -1,0 +1,246 @@
+<html>
+	<head>
+		<title>Aula06</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/controls/OrbitControls.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 100, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			//--------
+
+			//const gridHelper = new THREE.GridHelper(50,50);
+			//scene.add(gridHelper);
+
+			// const axesHelper = new THREE.AxesHelper(5); // Cria um guia para os eixos cartesianos
+			// scene.add(axesHelper); 						// Adiciona os eixos na cena
+			
+			var loader = new THREE.TextureLoader();
+			var textTerra = loader.load("img/earth.jpg");
+			var spacebg = loader.load("img/space.jpg");
+			var normalMap = loader.load("img/normal.jpg");
+			var specMap = loader.load("img/specular.jpg");
+			var imgsol = loader.load("img/sol.jpg");
+            var mercText = loader.load("img/mercurio.jpg");
+			var luaText = loader.load("img/mercurio.jpg");
+			var venText = loader.load("img/venus.jpg");
+			var marText = loader.load("img/marte.jpg");
+			var jupText = loader.load("img/jupiter.jpg");
+			var satText = loader.load("img/saturno.jpg");
+			var uraText = loader.load("img/urano.jpg");
+			var netText = loader.load("img/netuno.jpg");
+
+
+			const geometry = new THREE.SphereGeometry( 10, 64, 32 );
+			
+			const tamMercurio = new THREE.SphereGeometry(0.7,64,32);
+			const tamVenus = new THREE.SphereGeometry( 1,64,32);
+			const tamTerra = new THREE.SphereGeometry( 1.3,64,32);
+			const tamLua = new THREE.SphereGeometry( 0.3,64,32);
+			const tamMarte = new THREE.SphereGeometry( 0.7,64,32);
+			const tamJupiter = new THREE.SphereGeometry( 5,64,32);
+			const tamSaturno = new THREE.SphereGeometry( 1,64,32);
+			const tamUrano = new THREE.SphereGeometry( 1,64,32);
+			const tamNetuno = new THREE.SphereGeometry( 0.5,64,32);
+			const anel = new THREE.TorusGeometry( 3, 0.5, 2, 200 );
+			const tamMeteoro = new THREE.TetrahedronGeometry( 1, 2);
+			anel.rotateX(-90 * Math.PI/180);
+
+			
+			
+			const light = new THREE.AmbientLight(0xffffff, 0.8 );
+			// const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+			// directionalLight.position.x = -10;
+			// directionalLight.position.y = 0;
+			// directionalLight.position.z = 10;
+			
+			scene.background = spacebg;
+			
+		
+			var solMaterial = new THREE.MeshPhongMaterial({
+				
+				map: imgsol
+				
+				});
+			
+			var mercurioMaterial = new THREE.MeshPhongMaterial({
+				
+				map: mercText
+				
+				});
+			
+			var venusMaterial = new THREE.MeshPhongMaterial({
+				
+				map: venText
+				
+				});
+
+			var terraMaterial = new THREE.MeshPhongMaterial({
+				
+				map: textTerra,
+                specMap,
+				
+				});
+			var luaMaterial = new THREE.MeshPhongMaterial({
+				
+				map: mercText
+				
+				});
+			var MarteMaterial = new THREE.MeshPhongMaterial({
+				
+				map: marText
+				
+				});
+			var jupiterMaterial = new THREE.MeshPhongMaterial({
+				
+				map: jupText
+				
+				});
+			var saturnoMaterial = new THREE.MeshPhongMaterial({
+				
+				map: satText
+				
+				});
+			var uranoMaterial = new THREE.MeshPhongMaterial({
+				
+				map: uraText
+				
+				});
+			var netunoMaterial = new THREE.MeshPhongMaterial({
+				
+				map: netText
+				
+				});
+			
+			
+			
+			
+			
+			const sol = new THREE.Mesh( geometry, solMaterial );
+			const mercurio = new THREE.Mesh( tamMercurio, mercurioMaterial );
+			const venus = new THREE.Mesh( tamVenus, venusMaterial );
+			const terra = new THREE.Mesh( tamTerra, terraMaterial );
+			const lua = new THREE.Mesh( tamLua, luaMaterial );
+			const marte = new THREE.Mesh( tamMarte, MarteMaterial );
+			const jupiter = new THREE.Mesh( tamJupiter, jupiterMaterial );
+			const saturno = new THREE.Mesh( tamSaturno, saturnoMaterial );
+			const anelSaturno = new THREE.Mesh( anel, saturnoMaterial );
+			const urano = new THREE.Mesh( tamUrano, uranoMaterial );
+			const netuno = new THREE.Mesh( tamNetuno, netunoMaterial );
+			const meteoro = new THREE.Mesh( tamMeteoro, mercurioMaterial );
+
+
+
+			//posições planetas
+
+			mercurio.position.x = 20;
+			venus.position.x = 40;
+			terra.position.x = 50;
+			lua.position.x = 50;
+			lua.position.y = 3;
+			lua.position.z = 4;
+			marte.position.x = 60;
+			jupiter.position.x = 70;
+			saturno.position.x = 80;
+			urano.position.x = 90;
+			netuno.position.x = 100;
+			anelSaturno.position.x  = 80;
+			meteoro.position.x = 110;
+			 
+
+
+			
+			
+			
+			const mzMercurio = new THREE.Matrix4();
+			mzMercurio.makeRotationY(0.01);
+
+			const mzVenus = new THREE.Matrix4();
+			mzVenus.makeRotationY(0.009);
+
+			const mzTerra= new THREE.Matrix4();
+			mzTerra.makeRotationY(0.008);
+			const mzRotação= new THREE.Matrix4();
+			mzTerra.makeRotationY(0.008);
+
+			const mzLua= new THREE.Matrix4();
+			mzLua.makeRotationY(0.008);
+			
+			const mzMarte= new THREE.Matrix4();
+			mzMarte.makeRotationY(0.007);
+
+			const mzJupiter= new THREE.Matrix4();
+			mzJupiter.makeRotationY(0.006);
+
+			const mzSaturno= new THREE.Matrix4();
+			mzSaturno.makeRotationY(0.005);
+
+			 const mzAnel = new THREE.Matrix4();
+			 mzAnel.makeRotationY(0.005);
+
+			const mzUrano= new THREE.Matrix4();
+			mzUrano.makeRotationY(0.004);
+
+			const mzNetuno= new THREE.Matrix4();
+			mzNetuno.makeRotationY(0.003);
+
+			const myMeteoro= new THREE.Matrix4();
+			myMeteoro.makeRotationY(0.003);
+			
+			const mzMeteoro= new THREE.Matrix4();
+			mzMeteoro.makeRotationZ(0.003);
+
+			const mxMeteoro= new THREE.Matrix4();
+			mxMeteoro.makeRotationX(0.003);
+
+			
+
+
+			scene.add(sol,light, /*directionalLight,*/ mercurio, venus, terra,marte, jupiter, saturno, urano, netuno, anelSaturno, lua, meteoro );			
+			
+			camera.position.x = 40;
+			camera.position.y = 40;
+			camera.position.z = 40;
+
+			//---------
+			var animate = function () {
+				requestAnimationFrame( animate );
+
+				sol.rotation.y += 0.002;
+				mercurio.applyMatrix4(mzMercurio);
+				venus.applyMatrix4(mzVenus);
+				terra.applyMatrix4(mzTerra);
+				terra.rotation.y += 0.8;
+				lua.applyMatrix4(mzLua);
+				marte.applyMatrix4(mzMarte);
+				jupiter.applyMatrix4(mzJupiter);
+				saturno.applyMatrix4(mzSaturno);
+				urano.applyMatrix4(mzUrano);
+				netuno.applyMatrix4(mzNetuno);
+				anelSaturno.applyMatrix4(mzAnel);
+				meteoro.rotation.y += 0.1;
+				meteoro.rotation.x += 0.1;
+				meteoro.rotation.z += 0.1;
+				netuno.applyMatrix4(mzNetuno);
+
+
+
+				controls.update();
+
+				renderer.render( scene, camera );
+			};
+			animate();
+		</script>
+	</body>
+</html>

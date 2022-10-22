@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<title>Aula06</title>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script src="js/controls/OrbitControls.js"></script>
+		<script>
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			//--------
+
+			const gridHelper = new THREE.GridHelper(20,20);
+			scene.add(gridHelper);
+
+			const axesHelper = new THREE.AxesHelper(5); // Cria um guia para os eixos cartesianos
+			scene.add(axesHelper); 						// Adiciona os eixos na cena
+
+			// Carrega a textura
+			var loader = new THREE.TextureLoader();
+			var texture = loader.load("img/uv.jpeg");
+
+			const geometry = new THREE.BoxGeometry( 1, 1, 1);
+			const esfera = new THREE.SphereGeometry( 0.7, 64, 32);
+			const anel = new THREE.TorusGeometry( 0.45, 0.27, 24, 15 );
+			const tetra = new THREE.TetrahedronGeometry( 1, 0);
+			const cin = new THREE.CylinderGeometry( 0.5, 0.5, 1.5, 64);
+
+			var material = new THREE.MeshBasicMaterial({
+				color: 0xffffff,
+				map: texture
+				});
+			
+
+			const cube = new THREE.Mesh( geometry, material );
+			const sphere = new THREE.Mesh( esfera, material );
+			const rosca = new THREE.Mesh( anel, material );
+			const tetraedro = new THREE.Mesh(tetra, material);
+			const cilindro = new THREE.Mesh(cin, material);
+
+			sphere.position.x = 2;
+			rosca.position.x = 4;
+			tetraedro.position.x = -2;
+			cilindro.position.x = -4;
+			
+			
+			scene.add(cube, sphere, rosca, tetraedro, cilindro);			
+			
+			camera.position.x = 4;
+			camera.position.y = 3;
+			camera.position.z = 3;
+
+			//---------
+			var animate = function () {
+				requestAnimationFrame( animate );
+
+				cube.rotation.x += 0.005;
+				cube.rotation.y += -0.01;
+				cube.rotation.z += 0.012;
+
+				sphere.rotation.x += 0.005;
+				sphere.rotation.y += -0.01;
+				sphere.rotation.z += 0.012;
+				
+				rosca.rotation.x += 0.005;
+				rosca.rotation.y += -0.01;
+				rosca.rotation.z += 0.012;
+				
+				tetraedro.rotation.x += 0.005;
+				tetraedro.rotation.y += -0.01;
+				tetraedro.rotation.z += 0.012;
+
+				cilindro.rotation.x += 0.005;
+				cilindro.rotation.y += -0.01;
+				cilindro.rotation.z += 0.012;			
+
+
+
+				controls.update();
+
+				renderer.render( scene, camera );
+			};
+			animate();
+		</script>
+	</body>
+</html>
